@@ -1,17 +1,22 @@
-class QuickUnionUF {
+public class WeightedQuickUnion {
 
     private int[] id;
+    private int[] sz;
 
-    public QuickUnionUF(int n) {
+    public WeightedQuickUnion(int n) {
         id = new int[n];
-        for (int i = 0; i < n; i++)
+        sz = new int[n];
+        for (int i = 0; i < n; i++) {
             id[i] = i;
-
+            sz[i] = 1;
+        }
     }
 
     private int root(int i) {
-        while (i != id[i])
+        while (i != id[i]) {
+            id[i] = id[id[i]];
             i = id[i];
+        }
         return i;
     }
 
@@ -32,7 +37,12 @@ class QuickUnionUF {
             return;
         int rootFirstElement = id[firstElement];
         int rootSecondElement = id[secondElement];
-        id[rootFirstElement] = rootSecondElement;
+        if (sz[rootFirstElement] < sz[rootSecondElement]) {
+            id[rootFirstElement] = rootSecondElement;
+            sz[rootSecondElement] += sz[rootFirstElement];
+        } else {
+            id[rootSecondElement] = rootFirstElement;
+            sz[rootFirstElement] += sz[rootSecondElement];
+        }
     }
-
 }
